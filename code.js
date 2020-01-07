@@ -9,6 +9,8 @@ let onTap = function(touches, changedTouches, timeStamp){
 	console.log(touches.changedTouches[0])
 	if(!loading && touches.changedTouches[0].clientX < 300 && touches.changedTouches[0].clientY <100){
 		loading = true;
+		createPath(0,0,300,100);
+		drawText("加载中")
 		startRequest();	
 	}
 }
@@ -17,12 +19,12 @@ let canvas = tt.createCanvas();
 
 let ctx = canvas.getContext('2d');
 createPath(0,0,300,100);
-drawText();
+drawText("抖音 开始");
 function startRequest(){
 
 showToast(`加载中...`);
 let task = tt.request({
-    url: 'https://dzy.mplayad.com/myphone/functions/getGameVideo',
+    url: 'https://dzy.mplayad.com/myphone/functions/getDyGameVideo',
     data: {
         game:"zhaliepaopao"
     },
@@ -108,12 +110,12 @@ function onStartClick(){
 
 function createPath(x, y, width, height, radius) {
             ctx.rect(0,0,300,100);
-			ctx.fillStyle="#0022ee";
+			ctx.fillStyle="#eeeeee";
 			ctx.fill();	
 			
         }
 
-function drawText(){
+function drawText(text){
      var xoffset = ctx.measureText("开始").width;
      var x = 0,
          y = 0;
@@ -123,7 +125,7 @@ function drawText(){
      ctx.fillStyle = "#000";
      ctx.textBaseline = 'middle';
      ctx.textAlign = 'center';
-     ctx.fillText("开始", x + (300 - xoffset) / 2 + 10, y + (100 - 22) / 2 + 5, 300);
+     ctx.fillText(text, x + (300 - xoffset) / 2 + 10, y + (100 - 22) / 2 + 5, 300);
      ctx.closePath();
      ctx.restore();
  }
