@@ -5,6 +5,7 @@
 var shareText = null;
 var videoPath = null;
 var loading = false;
+var tempId = null;
 let onTap = function(touches, changedTouches, timeStamp){
 	console.log(touches.changedTouches[0])
 	if(!loading && touches.changedTouches[0].clientX < 300 && touches.changedTouches[0].clientY <100){
@@ -35,6 +36,7 @@ let task = tt.request({
 	method:"POST",
     success (res) {
         
+		tempId = res.result.id;
 		shareText = res.data.result.text;
 		setJianjiban(shareText);
 		tt.downloadFile({
@@ -73,7 +75,7 @@ function onStartClick(){
 			},
 			success() {
 				showToast('分享视频成功');
-				exitMiniProgram();
+				updateResult();
 			},
 			fail(e) {
 				showToast('分享视频失败');
@@ -128,4 +130,25 @@ function drawText(text){
      ctx.fillText(text, x + (300 - xoffset) / 2 + 10, y + (100 - 22) / 2 + 5, 300);
      ctx.closePath();
      ctx.restore();
+ }
+
+ function updateResult(){
+	 tt.request({
+    url: 'https://dzy.mplayad.com/myphone/functions/updateDyGameVideo',
+    data: {
+        id:tempId
+    },
+    header: {
+		"X-Parse-Application-Id":"apollo_online",
+        'content-type': 'application/json'
+    },
+	method:"POST",
+    success (res) {
+		exitMiniProgram();
+		
+    },
+    fail (res) {
+		showToast(`update api调用失败`);
+    }
+});
  }
