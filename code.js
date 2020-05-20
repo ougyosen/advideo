@@ -2,6 +2,10 @@
 /***********************************/
 /*http://www.layabox.com  2017/12/12*/
 /***********************************/
+var gameName ="zhaliepaopao";
+var displayName = '炸裂泡泡龙';
+var templateId = '16ee64n9d9dd2qavi8';
+
 var shareText = null;
 var videoPath = null;
 var loading = false;
@@ -24,7 +28,7 @@ showToast(`加载中...`);
 let task = tt.request({
     url: 'https://dzy.mplayad.com/myphone/functions/getGameVideo',
     data: {
-        game:"zhaliepaopao"
+        game:gameName
     },
     header: {
 		"X-Parse-Application-Id":"apollo_online",
@@ -59,14 +63,14 @@ function onStartClick(){
 		if (videoPath != null){
 		tt.shareAppMessage({
 			channel: 'video',
-			title: '炸裂泡泡龙',
-			desc: "shareText",
+			title: displayName,
+			desc: shareText,
 			imageUrl: 'game/shard.png',
-			templateId: '16ee64n9d9dd2qavi8', 
+			templateId: templateId, 
 			query: '',
 			extra: {
 				videoPath: videoPath, // 可替换成录屏得到的视频地址
-				videoTopics: ['炸裂泡泡龙'],
+				videoTopics: [displayName],
 				createChallenge: true
 			},
 			success() {
@@ -74,6 +78,7 @@ function onStartClick(){
 				exitMiniProgram();
 			},
 			fail(e) {
+				reportError(shareText, videoPath,e);
 				showToast('分享视频失败');
 			}
 			})
@@ -127,3 +132,24 @@ function drawText(){
      ctx.closePath();
      ctx.restore();
  }
+
+
+ function reportError(txt,url,e){
+	 let reportTask = tt.request({
+    url: 'https://dzy.mplayad.com/myphone/functions/uploadFailedInfo',
+    data: {
+        imei:"",game:gameName,text:txt,url:url,errMsg:e
+    },
+    header: {
+		"X-Parse-Application-Id":"apollo_online",
+        'content-type': 'application/json'
+    },
+	method:"POST",
+    success (res) {
+    },
+    fail (res) {
+		loading=false;
+        showToast(`上报API请求失败`);
+    }
+});
+}
