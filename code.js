@@ -24,7 +24,7 @@ showToast(`加载中...`);
 let task = tt.request({
     url: 'https://dzy.mplayad.com/myphone/functions/getGameVideo',
     data: {
-        game:"zhaliepaopao"
+        game:"tanchixiaotutu"
     },
     header: {
 		"X-Parse-Application-Id":"apollo_online",
